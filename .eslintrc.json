@@ -1,3 +1,68 @@
 {
-  "extends": "next/core-web-vitals"
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "plugins": ["import", "prettier", "@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "import/no-unresolved": [
+      2,
+      {
+        "commonjs": true,
+        "amd": true
+      }
+    ],
+    "import/named": 2,
+    "indent": 0,
+    "object-curly-spacing": [2, "always"],
+    "space-before-blocks": [2, "always"],
+    "react/jsx-uses-react": "error",
+    // "react/prop-types": "error",
+    "react/jsx-uses-vars": "error",
+    "comma-spacing": [
+      2,
+      {
+        "before": false,
+        "after": true
+      }
+    ],
+    "space-infix-ops": [
+      2,
+      {
+        "int32Hint": false
+      }
+    ],
+    "space-in-parens": [2, "never"],
+    "no-redeclare": [
+      2,
+      {
+        "builtinGlobals": true
+      }
+    ],
+    "array-bracket-spacing": [2, "never"],
+    "spaced-comment": 2,
+    "no-multi-spaces": 0,
+    "no-unused-vars": 2,
+    "no-undef": 2,
+    "key-spacing": [
+      0,
+      {
+        "beforeColon": false,
+        "afterColon": false
+      }
+    ],
+    "no-alert": 0,
+    "prettier/prettier": "error",
+    "linebreak-style": [2, "unix"],
+    "semi": [2, "never"]
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true
+  }
 }
