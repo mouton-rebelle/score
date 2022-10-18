@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ColorPalette, Color } from './color.styled'
-import * as colors from './colors'
+import { colors } from './colors'
 
 export const ColorPicker = ({
   color,
@@ -11,7 +11,7 @@ export const ColorPicker = ({
 }) => {
   return (
     <ColorPalette>
-      {colors.player.map((c) => (
+      {colors.map((c) => (
         <Color
           key={c}
           $color={c}

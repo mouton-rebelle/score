@@ -1,4 +1,4 @@
-export const player = [
+export const colors = [
   '#ef3e6e',
   '#da3f3b',
   '#0c3953',

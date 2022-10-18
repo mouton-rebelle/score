@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Player } from '../definitions'
+import { Player } from '../state'
 import { PlayerContainer, PlayerGrid } from './player.styled'
 
 export const PlayerDisplay = ({ player }: { player: Player }) => {
