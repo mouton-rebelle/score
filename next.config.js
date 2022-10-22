@@ -1,4 +1,6 @@
 module.exports = {
   reactStrictMode: true,
-  tyledComponents: true,
-};
+  compiler: {
+    styledComponents: true,
+  },
+}

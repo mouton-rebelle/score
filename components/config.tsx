@@ -6,14 +6,32 @@ import { PlayerEdit } from './player/player-edit'
 
 export const Config = ({
   players,
+  archivedPlayers,
   dispatch,
 }: {
   players: Player[]
+  archivedPlayers: Player[]
   dispatch: React.Dispatch<Actions>
 }) => {
   const [newPlayer, setNewPlayer] = React.useState<Player>(buildNewPlayer())
   return (
     <div>
+      <PlayerEdit player={newPlayer} update={setNewPlayer}>
+        <button
+          onClick={() => {
+            dispatch({
+              type: 'addPlayer',
+              payload: {
+                name: newPlayer.name,
+                color: newPlayer.color,
+              },
+            })
+            setNewPlayer(buildNewPlayer())
+          }}
+        >
+          save
+        </button>
+      </PlayerEdit>
       {players.map((player) => (
         <PlayerEdit
           key={player.id}
@@ -21,23 +39,30 @@ export const Config = ({
           update={({ id, name, color }) =>
             dispatch({ type: 'editPlayer', payload: { id, name, color } })
           }
-        />
+        >
+          <button
+            onClick={() => dispatch({ type: 'archivePlayer', payload: player })}
+          >
+            archive
+          </button>
+        </PlayerEdit>
       ))}
-      <PlayerEdit player={newPlayer} update={setNewPlayer} />
-      <button
-        onClick={() => {
-          dispatch({
-            type: 'addPlayer',
-            payload: {
-              name: newPlayer.name,
-              color: newPlayer.color,
-            },
-          })
-          setNewPlayer(buildNewPlayer())
-        }}
-      >
-        save
-      </button>
+      {archivedPlayers.map((player) => (
+        <PlayerEdit
+          key={player.id}
+          player={player}
+          isArchived
+          update={({ id, name, color }) =>
+            dispatch({ type: 'editPlayer', payload: { id, name, color } })
+          }
+        >
+          <button
+            onClick={() => dispatch({ type: 'restorePlayer', payload: player })}
+          >
+            archive
+          </button>
+        </PlayerEdit>
+      ))}
     </div>
   )
 }

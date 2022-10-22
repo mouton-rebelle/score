@@ -54,9 +54,52 @@ type EditPlayerAction = {
   type: 'editPlayer'
   payload: { id: string; name: string; color: string }
 }
-export type Actions = AddPlayerAction | EditPlayerAction
+type ArchivePlayerAction = {
+  type: 'archivePlayer'
+  payload: Player
+}
+type RestorePlayerAction = {
+  type: 'restorePlayer'
+  payload: Player
+}
+type UpdatePlayerScoreAction = {
+  type: 'updatePlayerScore'
+  payload: {
+    playerId: string
+    variance: number
+  }
+}
+export type Actions =
+  | AddPlayerAction
+  | EditPlayerAction
+  | ArchivePlayerAction
+  | RestorePlayerAction
+  | UpdatePlayerScoreAction
 export const scoreReducer = (state: AppState, action: Actions): AppState => {
   switch (action.type) {
+    case 'updatePlayerScore': {
+      const { playerId, variance } = action.payload
+      if (variance === 0) return state
+      const updatedPlayers = state.players.map((player) => {
+        if (player.id === playerId) {
+          const newScore = player.score + variance
+          const lastUpdates = player.lastUpdates
+            .concat({
+              variance,
+              timestamp: Date.now(),
+            })
+            .slice(-10)
+          return {
+            ...player,
+            score: newScore,
+            lastUpdates,
+          }
+        }
+        return player
+      })
+      writeValue('players', updatedPlayers)
+      return { ...state, players: updatedPlayers }
+    }
     case 'addPlayer': {
       const updatedPlayers = [
         ...state.players,
@@ -82,6 +125,34 @@ export const scoreReducer = (state: AppState, action: Actions): AppState => {
       )
       writeValue('players', updatedPlayers)
       return { ...state, players: updatedPlayers }
+    }
+    case 'archivePlayer': {
+      const updatedPlayers = state.players.filter(
+        (p: Player) => p.id !== action.payload.id
+      )
+      const updatedArchive = [action.payload, ...state.archivedPlayers]
+
+      writeValue('players', updatedPlayers)
+      writeValue('archive', updatedArchive)
+      return {
+        ...state,
+        players: updatedPlayers,
+        archivedPlayers: updatedArchive,
+      }
+    }
+    case 'restorePlayer': {
+      const updatedArchive = state.archivedPlayers.filter(
+        (p: Player) => p.id !== action.payload.id
+      )
+      const updatedPlayers = [action.payload, ...state.players]
+
+      writeValue('players', updatedPlayers)
+      writeValue('archive', updatedArchive)
+      return {
+        ...state,
+        players: updatedPlayers,
+        archivedPlayers: updatedArchive,
+      }
     }
   }
 }
