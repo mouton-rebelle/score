@@ -1,20 +1,20 @@
 import * as React from 'react'
 import { ColorPalette, Color } from './color.styled'
-import { colors } from './colors'
+import * as colors from '../styled/colors'
 
 export const ColorPicker = ({
   color,
   onChange,
 }: {
-  color: string
-  onChange: (color: string) => void
+  color: colors.availableColors
+  onChange: (color: colors.availableColors) => void
 }) => {
   return (
     <ColorPalette>
-      {colors.map((c) => (
+      {Object.keys(colors.colors).map((c: colors.availableColors) => (
         <Color
           key={c}
-          $color={c}
+          $color={colors.colors[c]}
           onClick={() => onChange(c)}
           $isActive={c === color}
         />

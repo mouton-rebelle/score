@@ -1,4 +1,4 @@
-import { colors } from './color/colors'
+import { colors, type availableColors } from './styled/colors'
 
 const getKey = () => Math.random().toString(36).substring(2, 8)
 
@@ -20,7 +20,7 @@ export type Player = {
   id: string
   name: string
   score: number
-  color: string
+  color: availableColors
   lastUpdates: ScoreVariance[]
 }
 type AppState = {
@@ -29,11 +29,13 @@ type AppState = {
 }
 
 export function buildNewPlayer(): Player {
+  const colorIndex = Math.floor(Math.random() * Object.keys(colors).length)
+  const coercedColor = Object.keys(colors)[colorIndex] as availableColors
   return {
     id: '',
     score: 0,
     name: '',
-    color: colors[Math.floor(Math.random() * colors.length)],
+    color: coercedColor,
     lastUpdates: [],
   }
 }
@@ -48,11 +50,11 @@ export const initialState: AppState = {
 
 type AddPlayerAction = {
   type: 'addPlayer'
-  payload: { name: string; color: string }
+  payload: { name: string; color: availableColors }
 }
 type EditPlayerAction = {
   type: 'editPlayer'
-  payload: { id: string; name: string; color: string }
+  payload: { id: string; name: string; color: availableColors }
 }
 type ArchivePlayerAction = {
   type: 'archivePlayer'

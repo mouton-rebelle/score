@@ -37,6 +37,7 @@ export const PlayerScore = ({
           const utterance = new SpeechSynthesisUtterance(
             `${player.name}, ${variance} point`
           )
+          utterance.volume = 50
           speechSynthesis.speak(utterance)
           setVariance(0)
           setStartVariance(0)
@@ -47,6 +48,7 @@ export const PlayerScore = ({
   )
   return (
     <PlayerContainer
+      $isScorePage
       $color={player.color}
       {...bind()}
       $isVarianceShown={variance !== 0}

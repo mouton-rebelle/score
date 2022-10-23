@@ -1,22 +1,23 @@
 import styled, { css } from 'styled-components'
-import { color, hsl } from 'd3-color'
+// import { color, hsl } from 'd3-color'
+import {
+  buildScheme,
+  gradientPurpleCyan,
+  background,
+  white,
+  type availableColors,
+} from '../styled/colors'
 import { animated } from '@react-spring/web'
+
 type PlayerContainerProps = {
-  readonly $color: string
+  readonly $color: availableColors
   readonly $isArchived?: boolean
   readonly $isVarianceShown?: boolean
+  readonly $isScorePage?: boolean
 }
 type PlayerGridProps = {
-  readonly $color: string
+  readonly $color: availableColors
   readonly $template: string
-}
-
-const rotateColor = (color: string, degrees: number) => {
-  const c = hsl(color)
-  c.h += degrees
-  c.l = c.l > 0.4 ? 0.15 : 0.85
-  c.s -= 0.2
-  return c
 }
 
 export const Variance = styled.div`
@@ -43,47 +44,27 @@ export const Name = styled.div`
 `
 
 export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
+  ${(p) => buildScheme(p.$color, p.$isScorePage ? 'fill' : 'outline')}
   touch-action: pan-y;
-  position: relative;
-  padding: 0;
   opacity: ${(props) => (props.$isArchived ? 0.3 : 1)};
-  background: linear-gradient(
-    to right,
-    ${(p) => p.$color},
-    ${(p) => color(p.$color).darker(0.3).toString()}
-  );
-  border: 3px solid ${(p) => color(p.$color).darker(0.6).toString()};
-  margin: 10px;
-  color: ${(p) => rotateColor(p.$color, 180).toString()};
   border-radius: 10px;
+  margin: 1em;
+  user-select: none;
   display: flex;
   input {
-    text-transform: uppercase;
     flex-grow: 1;
     &:focus,
     &:hover {
       outline: none;
-      background: ${(p) => color(p.$color).brighter(1.6).toString()};
-      box-shadow: inset 0 0 0px 3px
-        ${(p) => rotateColor(p.$color, 180).brighter(0.9).toString()};
     }
     padding: 0.2em 0.6em;
     font-size: 1.2em;
     font-weight: 500;
-    background: ${(p) => color(p.$color).brighter(0.6).toString()};
     background: transparent;
     border: none;
-    box-shadow: inset 0 0 0 1px
-      ${(p) => rotateColor(p.$color, 180).brighter(0.9).toString()};
     border-radius: 8px 0 0 8px;
-    color: ${(p) => rotateColor(p.$color, 180).toString()};
-    &::placeholder {
-      color: ${(p) => color(p.$color).darker(0.6).toString()};
-    }
   }
   button {
-    background: ${(p) => rotateColor(p.$color, 180).brighter(0.9).toString()};
-    color: ${(p) => color(p.$color).brighter(0.6).toString()};
     border-radius: 0 8px 8px 0;
     padding: 0.3em;
   }
@@ -112,7 +93,6 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
   button {
     padding: 1em;
     border: 0;
-    flex-basis: 120px;
     text-align: center;
     font-weight: 600;
     text-transform: uppercase;
@@ -123,4 +103,39 @@ export const PlayerGrid = styled.div<PlayerGridProps>`
   display: grid;
   grid-template-columns: ${(p) => p.$template};
   flex-grow: 1;
+`
+export const HistoryPane = styled(animated.div)`
+  background: ${gradientPurpleCyan};
+  padding: 1em;
+  position: absolute;
+  touch-action: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  border-radius: 22px;
+  top: 82vh;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  box-shadow: 1px -10px 10px 1px rgba(0, 0, 0, 0.2);
+`
+export const HistoryPaneContent = styled.div`
+  background: ${background};
+  display: grid;
+  grid-gap: 10px;
+  border-radius: 20px;
+  padding: 8px 24px;
+`
+export const HistoryVarianceLine = styled.div<{
+  readonly $color: availableColors
+}>`
+  ${(p) => buildScheme(p.$color, 'text')}
+  display: grid;
+  grid-template-columns: 1fr auto 40px;
+  .date {
+    color: ${white};
+  }
+  .variance {
+    text-align: right;
+  }
 `

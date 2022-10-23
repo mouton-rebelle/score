@@ -19,9 +19,10 @@ export const PlayerEdit = ({
 }: PlayerEditProps) => {
   return (
     <>
-      <PlayerContainer $color={player.color} $isArchived={isArchived}>
+      <PlayerContainer $color={player.color} $isArchived={Boolean(isArchived)}>
         <input
           value={player.name}
+          disabled={isArchived}
           placeholder="player name"
           onChange={(evt) => update({ ...player, name: evt.target.value })}
         />
