@@ -4,15 +4,26 @@ export const NavContainer = styled.nav`
   padding: 1em;
   display: grid;
   grid-template-columns: 1fr auto auto;
+
+  color: ${colors.white};
 `
 export const Button = styled.button`
-  background: ${colors.gradientYellowPink};
   &:last-child {
-    background: ${colors.gradientCyanGreen};
-    margin-left: 10px;
+    margin-left: 1em;
   }
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${colors.gradientPurpleCyan};
+  color: ${colors.pink};
   border: none;
   border-radius: 8px;
-  color: ${colors.background};
+  svg {
+    fill: rgba(0, 0, 0, 0.8);
+    width: 30px;
+    height: 30px;
+    display: block;
+  }
   width: 36px;
 `
