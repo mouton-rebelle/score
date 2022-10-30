@@ -7,7 +7,7 @@ import { initialState, scoreReducer } from '../components/state'
 export default function App() {
   const [configActive, setConfigActive] = React.useState(false)
   const [state, dispatch] = React.useReducer(scoreReducer, initialState)
-
+  const [winnerFirst, setWinnerFirst] = React.useState(false)
   const goto = React.useCallback((page: Page) => {
     setConfigActive(page === 'settings')
     const initVoice = new SpeechSynthesisUtterance('o')
@@ -23,7 +23,13 @@ export default function App() {
   }, [configActive])
   return (
     <>
-      <Nav active={configActive ? 'settings' : 'score'} goto={goto} />
+      <Nav
+        active={configActive ? 'settings' : 'score'}
+        goto={goto}
+        changeOrder={() => {
+          setWinnerFirst((w) => !w)
+        }}
+      />
       {configActive ? (
         <Config
           players={state.players}
@@ -32,7 +38,11 @@ export default function App() {
         />
       ) : (
         <>
-          <Game players={state.players} dispatch={dispatch} />
+          <Game
+            players={state.players}
+            dispatch={dispatch}
+            winnerFirst={winnerFirst}
+          />
           <History players={state.players} />
         </>
       )}
