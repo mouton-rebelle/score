@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 // import { color, hsl } from 'd3-color'
 import {
   buildScheme,
@@ -12,7 +12,6 @@ import { animated } from '@react-spring/web'
 type PlayerContainerProps = {
   readonly $color: availableColors
   readonly $isArchived?: boolean
-  readonly $isVarianceShown?: boolean
   readonly $isScorePage?: boolean
 }
 type PlayerGridProps = {
@@ -20,13 +19,23 @@ type PlayerGridProps = {
   readonly $template: string
 }
 
-export const Variance = styled.div`
-  font-weight: 800;
-  padding-left: 0.3em;
-  font-size: 1.4em;
+export const Variance = styled(animated.div)`
+  top: -55px;
+  height: 50px;
+  width: auto;
+  z-index: 2;
+  right: 60px;
+  position: absolute;
+  pointer-events: none;
   font-size: 2em;
+  text-align: right;
+  opacity: 0;
+  border-radius: 10px;
+  font-weight: 800;
+  span {
+    opacity: 0.6;
+  }
   padding: 0 10px;
-  transition: all 0.3s ease-in-out;
 `
 export const Score = styled.div`
   font-weight: 800;
@@ -34,7 +43,6 @@ export const Score = styled.div`
   font-size: 2em;
   padding: 0 10px;
   text-align: right;
-  transition: all 0.3s ease-in-out;
 `
 export const Name = styled.div`
   font-weight: 800;
@@ -51,6 +59,7 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
   margin: 1em;
   user-select: none;
   display: flex;
+  position: relative;
   input {
     flex-grow: 1;
     &:focus,
@@ -68,28 +77,10 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
     border-radius: 0 8px 8px 0;
     padding: 0.3em;
   }
-  ${(p) =>
-    p.$isVarianceShown
-      ? css`
-          ${Score} {
-            border-radius: 8px 0 0 8px;
-            background: rgba(255, 255, 255, 0.2);
-          }
-          ${Variance} {
-            background: rgba(255, 255, 255, 0.2);
-            margin-left: 2px;
-          }
-        `
-      : css`
-          ${Score} {
-            border-radius: 8px;
-          }
-          ${Variance} {
-            padding: 0.3em 0;
-            margin-left: 0;
-            overflow: hidden;
-          }
-        `}
+  ${Variance} {
+    ${(p) => buildScheme(p.$color, 'outline')}
+  }
+
   button {
     padding: 1em;
     border: 0;
