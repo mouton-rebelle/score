@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 // import { color, hsl } from 'd3-color'
 import {
   buildScheme,
@@ -12,6 +12,7 @@ import { animated } from '@react-spring/web'
 type PlayerContainerProps = {
   readonly $color: availableColors
   readonly $isArchived?: boolean
+  readonly $isDimmed?: boolean
   readonly $isScorePage?: boolean
 }
 type PlayerGridProps = {
@@ -21,13 +22,14 @@ type PlayerGridProps = {
 
 export const Variance = styled(animated.div)`
   top: -55px;
-  height: 50px;
   width: auto;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
   z-index: 2;
   right: 60px;
   position: absolute;
+  white-space: nowrap;
   pointer-events: none;
-  font-size: 2em;
+  font-size: 1.8em;
   text-align: right;
   opacity: 0;
   border-radius: 10px;
@@ -39,7 +41,6 @@ export const Variance = styled(animated.div)`
 `
 export const Score = styled.div`
   font-weight: 800;
-  padding-left: 0.3em;
   font-size: 2em;
   padding: 0 10px;
   text-align: right;
@@ -47,18 +48,23 @@ export const Score = styled.div`
 export const Name = styled.div`
   font-weight: 800;
   font-size: 1.4em;
-  padding: 10px;
+  padding: 0 10px;
   text-transform: uppercase;
 `
 
 export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
   ${(p) => buildScheme(p.$color, p.$isScorePage ? 'fill' : 'outline')}
   touch-action: pan-y;
-  opacity: ${(props) => (props.$isArchived ? 0.3 : 1)};
+  transition: all 0.2s ease-in-out;
+
+  opacity: ${(props) => (props.$isArchived ? 0.3 : props.$isDimmed ? 0.8 : 1)};
+
   border-radius: 10px;
   margin: 1em;
   user-select: none;
   display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   input {
     flex-grow: 1;
@@ -94,6 +100,7 @@ export const PlayerGrid = styled.div<PlayerGridProps>`
   display: grid;
   grid-template-columns: ${(p) => p.$template};
   flex-grow: 1;
+  align-items: center;
 `
 export const HistoryPane = styled(animated.div)`
   background: ${gradientPurpleCyan};

@@ -20,10 +20,19 @@ export const Game = ({
         : players,
     [players, winnerFirst]
   )
+  const [editedPlayer, setEditedPlayer] = React.useState<string>(null)
   return (
     <div>
       {sortedPlayer.map((player) => (
-        <PlayerScore key={player.id} player={player} dispatch={dispatch} />
+        <PlayerScore
+          key={player.id}
+          player={player}
+          dispatch={dispatch}
+          isDimmed={editedPlayer && editedPlayer !== player.id}
+          onActiveStateChange={(isActive) => {
+            setEditedPlayer(isActive ? player.id : null)
+          }}
+        />
       ))}
     </div>
   )

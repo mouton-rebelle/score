@@ -10,11 +10,17 @@ import {
   Name,
 } from './player.styled'
 
+const width = 390
+
 export const PlayerScore = ({
   player,
+  isDimmed,
+  onActiveStateChange,
   dispatch,
 }: {
   player: Player
+  isDimmed: boolean
+  onActiveStateChange: (boolean) => void
   dispatch: React.Dispatch<Actions>
 }) => {
   const [variance, setVariance] = React.useState(0)
@@ -25,13 +31,20 @@ export const PlayerScore = ({
 
   const bind = useDrag(
     ({ down, movement: [mx] }) => {
+      const computedVariance = Math.floor(mx / 20)
+      onActiveStateChange(true)
       clearTimeout(callbackRef.current)
-      api.start({ opacity: 1, top: -55, right: 60, config: config.gentle })
-      if (Math.floor(mx / 20) !== variance) {
-        setVariance(Math.floor(mx / 20) + startVariance)
+      api.start({
+        opacity: 1,
+        top: -55,
+        right: 60,
+        config: config.stiff,
+      })
+      if (computedVariance !== variance) {
+        setVariance(computedVariance + startVariance)
       }
       if (!down) {
-        setStartVariance(Math.floor(mx / 20) + startVariance)
+        setStartVariance(computedVariance + startVariance)
         callbackRef.current = setTimeout(() => {
           if (variance !== 0) {
             dispatch({
@@ -44,6 +57,7 @@ export const PlayerScore = ({
             utterance.volume = 50
             speechSynthesis.speak(utterance)
           }
+          onActiveStateChange(false)
           api.start({
             opacity: 0,
             top: -55,
@@ -59,7 +73,12 @@ export const PlayerScore = ({
     { axis: 'x' }
   )
   return (
-    <PlayerContainer $isScorePage $color={player.color} {...bind()}>
+    <PlayerContainer
+      $isScorePage
+      $isDimmed={isDimmed}
+      $color={player.color}
+      {...bind()}
+    >
       <PlayerGrid $color={player.color} $template="1fr auto auto">
         <Name>{player.name}</Name>
         <Score>{player.score}</Score>
