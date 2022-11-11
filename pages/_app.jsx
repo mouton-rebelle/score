@@ -9,8 +9,8 @@ function MyApp({ Component, pageProps }) {
         <meta name="theme-color" content={background} />
         <link
           rel="apple-touch-icon-precomposed"
-          sizes="152x152"
-          href="/favicon-152.png"
+          sizes="180x180"
+          href="/favicon-180.png"
         />
         <link
           rel="icon"
