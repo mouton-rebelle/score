@@ -10,8 +10,6 @@ import {
   Name,
 } from './player.styled'
 
-const width = 390
-
 export const PlayerScore = ({
   player,
   isDimmed,
