@@ -7,6 +7,17 @@ function MyApp({ Component, pageProps }) {
       <Head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content={background} />
+        <link
+          rel="apple-touch-icon-precomposed"
+          sizes="152x152"
+          href="/favicon-152.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          href="/favicon-96.png"
+          sizes="96x96"
+        />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
