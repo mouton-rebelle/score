@@ -24,13 +24,16 @@ export const GlobalStyle = createGlobalStyle`
 html, body {
   height: 100%;
   overflow-x: hidden;
-  background: ${colors.background};
+  background-color: ${colors.background};
   color: ${colors.white};
 }
 body {
   user-select:none;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  & > div {
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
   &.scrollLock{  
     touch-action:none;
     & > div{
