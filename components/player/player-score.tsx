@@ -13,11 +13,13 @@ import {
 export const PlayerScore = ({
   player,
   isDimmed,
+  voiceOverEnabled,
   onActiveStateChange,
   dispatch,
 }: {
   player: Player
   isDimmed: boolean
+  voiceOverEnabled: boolean
   onActiveStateChange: (boolean) => void
   dispatch: React.Dispatch<Actions>
 }) => {
@@ -49,11 +51,12 @@ export const PlayerScore = ({
               type: 'updatePlayerScore',
               payload: { playerId: player.id, variance },
             })
-            const utterance = new SpeechSynthesisUtterance(
-              `${player.name}, ${variance} point`
-            )
-            utterance.volume = 50
-            speechSynthesis.speak(utterance)
+            if (voiceOverEnabled) {
+              const utterance = new SpeechSynthesisUtterance(
+                `${player.name}, ${variance} point`
+              )
+              speechSynthesis.speak(utterance)
+            }
           }
           onActiveStateChange(false)
           api.start({

@@ -26,13 +26,15 @@ html, body {
   overflow-x: hidden;
   background-color: ${colors.background};
   color: ${colors.white};
+  font-family: "Fira Code", monospace;
 }
 body {
   user-select:none;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  padding-top: env(safe-area-inset-top, 1em);
   & > div {
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  padding: env(safe-area-inset-top, 1em) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   }
   &.scrollLock{  
     touch-action:none;
@@ -55,9 +57,5 @@ p, h1, h2, h3, h4, h5, h6 {
 #root, #__next {
   isolation: isolate;
 }
-  html, body{
-    font-family: "Fira Code", monospace;
-    margin: 0;
-    padding: 0;
-  }
+
 `

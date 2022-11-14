@@ -52,6 +52,11 @@ type AddPlayerAction = {
   type: 'addPlayer'
   payload: { name: string; color: availableColors }
 }
+
+type ResetScoreAction = {
+  type: 'resetScore'
+  payload: { score: number }
+}
 type EditPlayerAction = {
   type: 'editPlayer'
   payload: { id: string; name: string; color: availableColors }
@@ -75,10 +80,23 @@ export type Actions =
   | AddPlayerAction
   | EditPlayerAction
   | ArchivePlayerAction
+  | ResetScoreAction
   | RestorePlayerAction
   | UpdatePlayerScoreAction
 export const scoreReducer = (state: AppState, action: Actions): AppState => {
   switch (action.type) {
+    case 'resetScore': {
+      const { score } = action.payload
+      const updatedPlayers = state.players.map((player) => {
+        return {
+          ...player,
+          lastUpdates: [],
+          score,
+        }
+      })
+      writeValue('players', updatedPlayers)
+      return { ...state, players: updatedPlayers }
+    }
     case 'updatePlayerScore': {
       const { playerId, variance } = action.payload
       if (variance === 0) return state
