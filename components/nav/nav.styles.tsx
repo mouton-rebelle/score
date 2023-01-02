@@ -14,22 +14,16 @@ const NavElement = css`
   padding: 8px;
   border: 0;
   outline: none;
+  background: transparent;
   box-shadow: none;
-  border-left: 2px solid ${colors.background};
+  border: 1px solid ${colors.background};
   display: flex;
   align-items: center;
   justify-content: center;
-  &:last-child {
-    border-radius: 0 16px 16px 0;
-  }
-  &:first-child {
-    border-radius: 16px 0 0 16px;
-    border-left: none;
-  }
 `
 export const Button = styled.button<{ $isActive: boolean }>`
   ${NavElement}
-  background: transparent;
+
   svg {
     fill: ${colors.background};
     stroke: ${colors.background};
@@ -42,7 +36,6 @@ export const Button = styled.button<{ $isActive: boolean }>`
 
 export const Form = styled.form<{ $isActive: boolean }>`
   ${NavElement}
-  background: transparent;
   margin: 0;
   input {
     color: ${colors.background};

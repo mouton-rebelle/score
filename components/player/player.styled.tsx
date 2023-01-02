@@ -95,7 +95,14 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
     text-transform: uppercase;
   }
 `
-
+export const PlayerButton = styled.button`
+  background: rgba(0, 0, 0, 0);
+  position: absolute;
+  width: 50%;
+  top: 0;
+  bottom: 0;
+  border-radius: 0 !important;
+`
 export const PlayerGrid = styled.div<PlayerGridProps>`
   display: grid;
   grid-template-columns: ${(p) => p.$template};
