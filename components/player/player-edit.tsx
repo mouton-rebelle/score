@@ -3,6 +3,7 @@ import * as React from 'react'
 import { Player } from '../state'
 import { PlayerContainer } from './player.styled'
 import { ColorPicker } from '../color/color-picker'
+
 type PlayerEditProps = {
   player: Player
   update: (p: Player) => void

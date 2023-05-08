@@ -17,11 +17,10 @@ export default function App() {
   const [scoreReset, setScoreReset] = React.useState('0')
   const inputRef = React.useRef<HTMLInputElement>(null)
   const noSleepRef = React.useRef<NoSleep>()
-  React.useEffect(() => {
-    noSleepRef.current = new NoSleep()
-  }, [])
+
   React.useEffect(() => {
     if (typeof window !== undefined) {
+      noSleepRef.current = new NoSleep()
       if (configActive) window.document.body.classList.remove('scrollLock')
       else window.document.body.classList.add('scrollLock')
     }
@@ -76,6 +75,12 @@ export default function App() {
               type="number"
               autoFocus
               onBlur={() => setResetting(false)}
+              onFocus={(evt) => {
+                console.log(inputRef.current, this, evt)
+                evt.target.type = 'text'
+                evt.target.setSelectionRange(0, 999)
+                evt.target.type = 'number'
+              }}
               value={scoreReset}
               onChange={(evt) => setScoreReset(evt.target.value)}
             />

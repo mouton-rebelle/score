@@ -56,10 +56,14 @@ export const Name = styled.div`
 
 export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
   ${(p) => buildScheme(p.$color, p.$isScorePage ? 'fill' : 'outline')}
-  touch-action: pan-y;
   transition: all 0.2s ease-in-out;
 
-  opacity: ${(props) => (props.$isArchived ? 0.3 : props.$isDimmed ? 0.4 : 1)};
+  opacity: ${(props) => (props.$isArchived ? 0.6 : props.$isDimmed ? 0.4 : 1)};
+
+  touch-action: manipulation;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  user-select: none;
 
   border-radius: 10px;
   margin: 1em;
@@ -69,6 +73,7 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
   justify-content: center;
   position: relative;
   input {
+    touch-action: manipulation;
     flex-grow: 1;
     &:focus,
     &:hover {
@@ -81,18 +86,24 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
     border: none;
     border-radius: 8px 0 0 8px;
   }
-  button {
-    border-radius: 0 8px 8px 0;
-    padding: 0.3em;
-  }
+
   ${Variance} {
     ${(p) => buildScheme(p.$color, 'outline')}
   }
 
   button {
+    &:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+    padding: 0.3em;
     touch-action: manipulation;
     padding: 1em;
     border: 0;
+    user-select: none;
     text-align: center;
     font-weight: 600;
     text-transform: uppercase;
@@ -104,6 +115,7 @@ export const PlayerButton = styled.button`
   width: 50%;
   top: 0;
   bottom: 0;
+  user-select: none;
   touch-action: manipulation;
   border-radius: 0 !important;
 `
@@ -111,6 +123,7 @@ export const PlayerGrid = styled.div<PlayerGridProps>`
   display: grid;
   grid-template-columns: ${(p) => p.$template};
   flex-grow: 1;
+  user-select: none;
   touch-action: manipulation;
   align-items: center;
 `
@@ -118,7 +131,7 @@ export const HistoryPane = styled(animated.div)`
   background: ${gradientPurpleCyan};
   padding: 1em;
   position: absolute;
-  touch-action: none;
+  touch-action: manipulation;
   -moz-user-select: none;
   -webkit-user-drag: none;
   user-select: none;

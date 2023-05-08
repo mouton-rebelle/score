@@ -51,9 +51,11 @@ export const buildScheme = (
         border: 2px solid ${colors[color]};
         color: ${colors[color]};
         input {
+          transition: all 0.2s ease-in-out;
           color: ${colors[color]};
         }
         button {
+          transition: all 0.2s ease-in-out;
           background: ${colors[color]};
         }
       `

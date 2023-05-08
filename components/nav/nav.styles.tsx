@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import * as colors from '../styled/colors'
 export const NavContainer = styled.nav`
-  margin: 1em 1em 3em 1em;
+  margin: 0.2em 1em 2em 1em;
   background: ${colors.white};
   border-radius: 16px;
   display: grid;
@@ -17,7 +17,10 @@ const NavElement = css`
   outline: none;
   background: transparent;
   box-shadow: none;
-  border: 1px solid ${colors.background};
+  border-right: 2px solid ${colors.background};
+  &:last-child {
+    border-right: none;
+  }
   display: flex;
   align-items: center;
   justify-content: center;

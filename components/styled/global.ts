@@ -24,7 +24,7 @@ export const GlobalStyle = createGlobalStyle`
 html, body {
   height: 100%;
   overflow-x: hidden;
-  background-color: ${colors.background};
+  background: ${colors.background};
   color: ${colors.white};
   font-family: "Fira Code", monospace;
 }

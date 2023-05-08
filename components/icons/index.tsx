@@ -1,6 +1,5 @@
-export { Sort } from './sort'
-export { SortAsc } from './sort-asc'
-export { SortDesc } from './sort-desc'
+export { Sort, SortAsc, SortDesc } from './sort'
+export { Restore, Add, Archive } from './edit'
 export { Settings } from './settings'
 export { Close } from './close'
 export { Logo } from './logo'

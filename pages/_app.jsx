@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
         />
         <meta
           name="viewport"
-          content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"
+          content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, minimum-scale=1, user-scalable=no"
         />
       </Head>
       <GlobalStyle />

@@ -69,6 +69,10 @@ type RestorePlayerAction = {
   type: 'restorePlayer'
   payload: Player
 }
+type RemovePlayerAction = {
+  type: 'removePlayer'
+  payload: Player
+}
 type UpdatePlayerScoreAction = {
   type: 'updatePlayerScore'
   payload: {
@@ -79,12 +83,24 @@ type UpdatePlayerScoreAction = {
 export type Actions =
   | AddPlayerAction
   | EditPlayerAction
+  | RemovePlayerAction
   | ArchivePlayerAction
   | ResetScoreAction
   | RestorePlayerAction
   | UpdatePlayerScoreAction
 export const scoreReducer = (state: AppState, action: Actions): AppState => {
   switch (action.type) {
+    case 'removePlayer': {
+      const updatedArchive = state.archivedPlayers.filter(
+        (p: Player) => p.id !== action.payload.id
+      )
+
+      writeValue('archive', updatedArchive)
+      return {
+        ...state,
+        archivedPlayers: updatedArchive,
+      }
+    }
     case 'resetScore': {
       const { score } = action.payload
       const updatedPlayers = state.players.map((player) => {
