@@ -43,12 +43,14 @@ export const Score = styled.div`
   font-weight: 800;
   font-size: 2em;
   padding: 0 10px;
+  touch-action: manipulation;
   text-align: right;
 `
 export const Name = styled.div`
   font-weight: 800;
   font-size: 1.4em;
   padding: 0 10px;
+  touch-action: manipulation;
   text-transform: uppercase;
 `
 
@@ -57,7 +59,7 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
   touch-action: pan-y;
   transition: all 0.2s ease-in-out;
 
-  opacity: ${(props) => (props.$isArchived ? 0.3 : props.$isDimmed ? 0.8 : 1)};
+  opacity: ${(props) => (props.$isArchived ? 0.3 : props.$isDimmed ? 0.4 : 1)};
 
   border-radius: 10px;
   margin: 1em;
@@ -88,6 +90,7 @@ export const PlayerContainer = styled(animated.div)<PlayerContainerProps>`
   }
 
   button {
+    touch-action: manipulation;
     padding: 1em;
     border: 0;
     text-align: center;
@@ -101,12 +104,14 @@ export const PlayerButton = styled.button`
   width: 50%;
   top: 0;
   bottom: 0;
+  touch-action: manipulation;
   border-radius: 0 !important;
 `
 export const PlayerGrid = styled.div<PlayerGridProps>`
   display: grid;
   grid-template-columns: ${(p) => p.$template};
   flex-grow: 1;
+  touch-action: manipulation;
   align-items: center;
 `
 export const HistoryPane = styled(animated.div)`

@@ -9,6 +9,7 @@ export const NavContainer = styled.nav`
   border: 2px solid ${colors.background};
   color: ${colors.background};
   box-shadow: 1px 10px 10px 1px rgba(0, 0, 0, 0.2);
+  background-image: linear-gradient(#2d323d, #10141c);
 `
 const NavElement = css`
   padding: 8px;
@@ -25,8 +26,8 @@ export const Button = styled.button<{ $isActive: boolean }>`
   ${NavElement}
 
   svg {
-    fill: ${colors.background};
-    stroke: ${colors.background};
+    fill: white;
+    stroke: none;
     width: 30px;
     height: 30px;
     display: block;

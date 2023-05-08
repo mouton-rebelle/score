@@ -1,5 +1,5 @@
 import * as React from 'react'
-
+import { NoSleep } from '../libs/nosleep'
 import { Config } from '../components/config'
 import { Game } from '../components/game'
 import { NavContainer, Button, Form } from '../components/nav/nav.styles'
@@ -14,7 +14,10 @@ export default function App() {
   const [voiceOver, setVoiceOver] = React.useState(false)
   const [scoreReset, setScoreReset] = React.useState('0')
   const inputRef = React.useRef<HTMLInputElement>(null)
-
+  const noSleepRef = React.useRef<NoSleep>()
+  React.useEffect(() => {
+    noSleepRef.current = new NoSleep()
+  }, [])
   React.useEffect(() => {
     if (typeof window !== undefined) {
       if (configActive) window.document.body.classList.remove('scrollLock')
@@ -26,16 +29,17 @@ export default function App() {
       {/* NAV */}
       <NavContainer>
         <Button
-          $isActive={voiceOver}
+          $isActive
           onClick={() => {
             setVoiceOver(!voiceOver)
+            noSleepRef.current?.enable?.()
             if (!voiceOver) {
               const utterance = new SpeechSynthesisUtterance('hello')
               speechSynthesis.speak(utterance)
             }
           }}
         >
-          <Icons.Voice />
+          {voiceOver ? <Icons.VoiceOff /> : <Icons.VoiceOn />}
         </Button>
         <Form
           $isActive={!configActive}

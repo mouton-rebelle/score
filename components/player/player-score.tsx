@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { useSpring, config } from '@react-spring/web'
+
+import { config, Controller } from '@react-spring/web'
 import type { Player, Actions } from '../state'
 import {
   PlayerContainer,
@@ -34,6 +35,15 @@ const beep = (frequency: number) => {
   oscillator.start(0)
   oscillator.stop(window.__AUDIO_CTX__.currentTime + 0.08)
 }
+const CONFIRMATION_TIME = 1200
+/*
+  This one is tricky : 
+  We want to allow user to edit variance until CONFIRMATION_TIME timer expires
+  So we need to reset confirmCallbackRef when the user interracts (mouse down / tck)
+  
+
+ */
+
 export const PlayerScore = ({
   player,
   isDimmed,
@@ -44,79 +54,105 @@ export const PlayerScore = ({
   player: Player
   isDimmed: boolean
   voiceOverEnabled: boolean
-  onActiveStateChange: (boolean) => void
+  onActiveStateChange: (active: boolean) => void
   dispatch: React.Dispatch<Actions>
 }) => {
-  const [variance, setVariance] = React.useState(0)
+  const overlayShownRef = React.useRef(false)
+  // we use a ref for variance, so the callback is not out of sync
+  const varianceRef = React.useRef(0)
+  // and a fake state to trigger render and ensure we got the ref value on render
+  const [, setForceRender] = React.useState(false)
   const repeatCallbackRef = React.useRef<ReturnType<typeof setTimeout>>()
   const confirmCallbackRef = React.useRef<ReturnType<typeof setTimeout>>()
   const velocity = React.useRef<number>(START_VELOCITY)
   const tickCount = React.useRef<number>(0)
   const factor = React.useRef<number>(1)
-  const [props, api] = useSpring(() => ({ opacity: 0, top: -55, right: -200 }))
+  const animations = React.useMemo(
+    () => new Controller({ opacity: 0, top: -55, right: -200 }),
+    []
+  )
+  const animate = React.useCallback(() => {
+    animations.start(
+      overlayShownRef.current
+        ? {
+            opacity: 1,
+            top: -55,
+            right: 60,
+            config: config.stiff,
+          }
+        : { opacity: 0, top: -55, right: -200, config: config.wobbly }
+    )
+  }, [animations])
 
   const tick = React.useCallback(() => {
+    clearTimeout(confirmCallbackRef.current)
     tickCount.current++
     if (tickCount.current % 5 === 0) {
       velocity.current = Math.max(MIN_VELOCITY, velocity.current - 30)
     }
-    clearTimeout(confirmCallbackRef.current)
-    setVariance((v) => v + factor.current)
+    varianceRef.current = varianceRef.current + factor.current
+    setForceRender((v) => !v)
+    overlayShownRef.current = true
+    animate()
     repeatCallbackRef.current = setTimeout(tick, velocity.current)
     beep(factor.current > 0 ? 400 : 200)
-  }, [])
+  }, [animate])
 
   const confirmScore = React.useCallback(() => {
     onActiveStateChange(false)
-    if (variance !== 0) {
+    overlayShownRef.current = false
+    animate()
+    if (varianceRef.current !== 0) {
       dispatch({
         type: 'updatePlayerScore',
-        payload: { playerId: player.id, variance },
+        payload: { playerId: player.id, variance: varianceRef.current },
       })
       if (voiceOverEnabled) {
         const utterance = new SpeechSynthesisUtterance(
-          `${player.name}, ${variance} point`
+          `${player.name}, ${varianceRef.current} point`
         )
         speechSynthesis.speak(utterance)
       }
     }
-    api.start({
-      opacity: 0,
-      top: -55,
-      right: -200,
-      onRest: () => {
-        setVariance(0)
-      },
-    })
   }, [
-    api,
+    animate,
     dispatch,
     onActiveStateChange,
     player.id,
     player.name,
-    variance,
     voiceOverEnabled,
   ])
+
   const onMouseDown = React.useCallback(
     (evt) => {
+      // when we switch from up or down button, we remove the confirm callback
+      clearTimeout(confirmCallbackRef.current)
       tickCount.current = 0
       velocity.current = START_VELOCITY
       factor.current = evt.target.dataset.operation === 'add' ? 1 : -1
-      tick()
+      if (!overlayShownRef.current) {
+        varianceRef.current = 0
+        setForceRender((v) => !v)
+      }
+      repeatCallbackRef.current = setTimeout(tick, velocity.current)
       onActiveStateChange(true)
-      api.start({
-        opacity: 1,
-        top: -55,
-        right: 60,
-        config: config.stiff,
-      })
     },
-    [api, onActiveStateChange, tick]
+    [onActiveStateChange, tick]
   )
+
   const onMouseUp = React.useCallback(() => {
     clearTimeout(repeatCallbackRef.current)
-    confirmCallbackRef.current = setTimeout(confirmScore, 1200)
-  }, [confirmScore])
+    confirmCallbackRef.current = setTimeout(confirmScore, CONFIRMATION_TIME)
+    animate()
+  }, [confirmScore, animate])
+
+  const onClick = React.useCallback(() => {
+    varianceRef.current = varianceRef.current + factor.current
+    overlayShownRef.current = true
+    setForceRender((v) => !v)
+    animate()
+    beep(factor.current > 0 ? 400 : 200)
+  }, [animate])
 
   return (
     <PlayerContainer $isScorePage $isDimmed={isDimmed} $color={player.color}>
@@ -125,22 +161,24 @@ export const PlayerScore = ({
         data-operation="substract"
         onPointerDown={onMouseDown}
         onPointerUp={onMouseUp}
+        onClick={onClick}
       />
       <PlayerButton
         style={{ right: 0 }}
         data-operation="add"
         onPointerDown={onMouseDown}
         onPointerUp={onMouseUp}
+        onClick={onClick}
       />
       <PlayerGrid $color={player.color} $template="1fr auto auto">
         <Name>{player.name}</Name>
         <Score>{player.score}</Score>
 
-        <Variance style={props}>
+        <Variance style={animations.springs}>
           <span>{player.score}</span>
-          {variance >= 0 && '+'}
-          {variance}
-          <span>={player.score + variance}</span>
+          {varianceRef.current >= 0 && '+'}
+          {varianceRef.current}
+          <span>={player.score + varianceRef.current}</span>
         </Variance>
       </PlayerGrid>
     </PlayerContainer>
