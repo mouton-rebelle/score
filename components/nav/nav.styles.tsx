@@ -5,7 +5,7 @@ export const NavContainer = styled.nav`
   background: ${colors.white};
   border-radius: 16px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   border: 2px solid ${colors.background};
   color: ${colors.background};
   box-shadow: 1px 10px 10px 1px rgba(0, 0, 0, 0.2);
@@ -26,7 +26,7 @@ export const Button = styled.button<{ $isActive: boolean }>`
   ${NavElement}
 
   svg {
-    fill: white;
+    fill: ${colors.white};
     stroke: none;
     width: 30px;
     height: 30px;
@@ -39,20 +39,16 @@ export const Form = styled.form<{ $isActive: boolean }>`
   ${NavElement}
   margin: 0;
   input {
-    color: ${colors.background};
+    color: ${colors.white};
     text-align: center;
     -webkit-touch-callout: none;
-    opacity: ${(p) => (p.$isActive ? 1 : 0.2)};
     background: transparent;
     width: 44px;
-    border: 1px solid transparent;
+    border: 1px solid white;
     border-radius: 16px;
     font-size: 18px;
     line-height: 18px;
     height: 28px;
     outline: none;
-    &:focus {
-      border: 1px solid ${colors.pink};
-    }
   }
 `

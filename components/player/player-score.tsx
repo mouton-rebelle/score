@@ -60,7 +60,7 @@ export const PlayerScore = ({
   const overlayShownRef = React.useRef(false)
   // we use a ref for variance, so the callback is not out of sync
   const varianceRef = React.useRef(0)
-  // and a fake state to trigger render and ensure we got the ref value on render
+  // and a fake state to trigger render and ensure we got the ref value on render for display purposes
   const [, setForceRender] = React.useState(false)
   const repeatCallbackRef = React.useRef<ReturnType<typeof setTimeout>>()
   const confirmCallbackRef = React.useRef<ReturnType<typeof setTimeout>>()

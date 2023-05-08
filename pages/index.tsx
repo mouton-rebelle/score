@@ -10,8 +10,10 @@ import { initialState, scoreReducer } from '../components/state'
 export default function App() {
   const [configActive, setConfigActive] = React.useState(false)
   const [state, dispatch] = React.useReducer(scoreReducer, initialState)
-  const [winnerFirst, setWinnerFirst] = React.useState(false)
+  const [sort, setSort] = React.useState<'none' | 'dsc' | 'asc'>('none')
   const [voiceOver, setVoiceOver] = React.useState(false)
+  const [locked, setLocked] = React.useState(false)
+  const [resetting, setResetting] = React.useState(false)
   const [scoreReset, setScoreReset] = React.useState('0')
   const inputRef = React.useRef<HTMLInputElement>(null)
   const noSleepRef = React.useRef<NoSleep>()
@@ -41,32 +43,68 @@ export default function App() {
         >
           {voiceOver ? <Icons.VoiceOff /> : <Icons.VoiceOn />}
         </Button>
-        <Form
-          $isActive={!configActive}
-          onSubmit={(evt) => {
-            evt.preventDefault()
-            const score = parseInt(scoreReset)
-            if (!isNaN(score)) {
-              dispatch({ type: 'resetScore', payload: { score } })
-              setScoreReset('0')
-              inputRef?.current?.blur()
+        <Button
+          $isActive
+          onClick={() => {
+            if (locked) {
+              setLocked(false)
+              noSleepRef.current?.disable?.()
+            } else {
+              setLocked(true)
+              noSleepRef.current?.enable?.()
             }
           }}
         >
-          <input
-            ref={inputRef}
-            type="number"
-            value={scoreReset}
-            onChange={(evt) => setScoreReset(evt.target.value)}
-          />
-        </Form>
-
+          {locked ? <Icons.Unlocked /> : <Icons.Locked />}
+        </Button>
+        {resetting ? (
+          <Form
+            $isActive
+            onClick={() => inputRef.current?.focus()}
+            onSubmit={(evt) => {
+              evt.preventDefault()
+              const score = parseInt(scoreReset)
+              if (!isNaN(score)) {
+                dispatch({ type: 'resetScore', payload: { score } })
+                setScoreReset('0')
+                inputRef?.current?.blur()
+              }
+            }}
+          >
+            <input
+              ref={inputRef}
+              type="number"
+              autoFocus
+              onBlur={() => setResetting(false)}
+              value={scoreReset}
+              onChange={(evt) => setScoreReset(evt.target.value)}
+            />
+          </Form>
+        ) : (
+          <Button
+            $isActive
+            onClick={() => {
+              setResetting(true)
+            }}
+          >
+            <Icons.Reset />
+          </Button>
+        )}
         <Button
-          $isActive={winnerFirst}
-          disabled={configActive}
-          onClick={() => setWinnerFirst((v) => !v)}
+          $isActive
+          onClick={() =>
+            setSort((v) =>
+              v === 'none' ? 'dsc' : v === 'dsc' ? 'asc' : 'none'
+            )
+          }
         >
-          <Icons.Sort />
+          {sort === 'dsc' ? (
+            <Icons.SortDesc />
+          ) : sort === 'asc' ? (
+            <Icons.SortAsc />
+          ) : (
+            <Icons.Sort />
+          )}
         </Button>
 
         <Button $isActive onClick={() => setConfigActive((a) => !a)}>
@@ -86,7 +124,7 @@ export default function App() {
             voiceOverEnabled={voiceOver}
             players={state.players}
             dispatch={dispatch}
-            winnerFirst={winnerFirst}
+            sort={sort}
           />
           <History players={state.players} />
         </>

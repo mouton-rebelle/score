@@ -6,21 +6,29 @@ import { PlayerScore } from './player/player-score'
 
 export const Game = ({
   players,
-  winnerFirst,
+  sort,
   voiceOverEnabled,
   dispatch,
 }: {
   players: Player[]
   voiceOverEnabled: boolean
-  winnerFirst: boolean
+  sort: 'none' | 'dsc' | 'asc'
   dispatch: React.Dispatch<Actions>
 }) => {
   const sortedPlayer = React.useMemo(
     () =>
-      winnerFirst
-        ? [...players].sort((a, b) => (a.score > b.score ? -1 : 1))
+      sort != 'none'
+        ? [...players].sort((a, b) =>
+            a.score > b.score
+              ? sort === 'dsc'
+                ? -1
+                : 1
+              : sort === 'dsc'
+              ? 1
+              : -1
+          )
         : players,
-    [players, winnerFirst]
+    [players, sort]
   )
   const [editedPlayer, setEditedPlayer] = React.useState<string>(null)
   return (
